@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+    #textarea1{
+      width: 500px;
+      height: 500px;
+      font-size: 15px;
+    }
+    #textarea2{
+      width: 500px;
+      height: 230px;
+      font-size: 15px;
+    }
+    #textarea3{
+      width: 500px;
+      height: 230px;
+      font-size: 15px;
+    }
+    #expectedBySFC{
+      position: absolute;
+      left: 530px;
+      top: 75px;
+      font-size: 16px;
+    }
+    #memoText1{
+      position: absolute;
+      top: 100px;
+      left: 530px;
+      font-size: 14px;
+    }
+    #expectedByDepartment{
+      position: absolute;
+      top:295px;
+      left: 530px;
+      font-size: 16px;
+    }
+    #memoText2{
+      position: absolute;
+      left: 530px;
+      top: 320px;
+      font-size: 14px;
+    }
+    #numberOfCharacter1{
+      position: absolute;
+      left: 340px;
+      top: 50px;
+    }
+    #selectedCharacterLength1{
+      position: absolute;
+      top: 50px;
+      left: 410px;
+    }
+    #numberOfCharacter2{
+      position: absolute;
+      top: 825px;
+    }
+    #selectedCharacterLength2{
+      position: absolute;
+      top: 825px;
+      left: 70px;
+    }
+    #numberOfCharacter3{
+      position: absolute;
+      left: 530px;
+      top: 825px;
+    }
+    #selectedCharacterLength3{
+      position: absolute;
+      top: 825px;
+      left: 600px;
+    }
+    </style>
+    <title></title>
+  </head>
+  <body>
+    <h2>志望理由・入学後の学習計画・自己アピール</h2>
+    <textarea id="textarea1"></textarea><br>
+    <div id="numberOfCharacter1">0文字</div>
+    <div id="selectedCharacterLength1">０文字選択中</div>
+    <textarea id="textarea2"></textarea>
+    <textarea id="textarea3"></textarea>
+    <div id="numberOfCharacter2">0文字</div>
+    <div id="selectedCharacterLength2">0文字選択中</div>
+    <div id="numberOfCharacter3">0文字</div>
+    <div id="selectedCharacterLength3">0文字選択中</div>
+    <span id="expectedBySFC">＊SFCが期待する学生＊</span>
+    <span id="memoText1">
+      現代社会が直面する様々な問題は多岐にわたる複雑な要因が絡み合い、どの一つをとってみても個別学問の枠組みを大きく超えている。<br>
+      SFCでは、現実の諸問題を個別学問の域で切り取るのではなく、関係する既存の書学問の成果を知識と技術の体系として新たに再編成し、豊かな発想と広い視野から問題を捉えて解決に導く能力を自ら学び取る「問題発見解決型」「創造性開発型」の教育を重視している。<br>
+      学部の理念や内容をよく理解した上で「SFCでこんなことを学びたい」「問題意識」「テーマ」<br>
+      「自らの手で未来を拓く力を磨いてほしい」
+    </span>
+    <span id="expectedByDepartment">＊環境情報学部が期待する学生＊</span>
+    <span id="memoText2">
+      「環境と情報の時代」におけるグローバル社会の開拓者の育成。<br>
+      未来を自ら開拓できるたくましい力と人間性の確立を目指し、かつ、夢を実現し、問題を発見し解決する、実践的な力を身につける。<br>
+      自分の問題意識を明確にし、目標を立て、その実現のためになすべきとや将来参加したいプロジェクトについて考える<br>
+      自分で学んだ知識やスキルを通じて、どのような卒業プロジェクトをまとめてみたいかを構想<br>
+      学問分野にとらわれない幅広い視野を持ち、地球的規模で問題発見・解決できるプロフェッショナルを目指し、新しいことに挑戦するチャレンジ精神を持っている学生を歓迎<br>
+    </span>
+  </body>
+  <script src="./jquery-1.12.4.js"></script>
+  <script>
+  $(function(){
+    var $textarea1 = $('#textarea1');
+    var $textarea2 = $('#textarea2');
+    var $textarea3 = $('#textarea3');
+    var $numberOfCharacter1 = $('#numberOfCharacter1');
+    var $selectedCharacterLength1 = $('#selectedCharacterLength1');
+    var $numberOfCharacter2 = $('#numberOfCharacter2');
+    var $selectedCharacterLength2 = $('#selectedCharacterLength2');
+    var $numberOfCharacter3 = $('#numberOfCharacter3');
+    var $selectedCharacterLength3 = $('#selectedCharacterLength3');
+    var $memoText1 = $('#memoText1');
+    var $memoText2 = $('#memoText2');
+    var $expectedBySFC = $('#expectedBySFC');
+    var $expectedByDepartment = $('#expectedByDepartment');
+    $textarea1.keyup(function(){
+      $numberOfCharacter1.text($textarea1.val().length + '文字');
+    });
+    $textarea1.select(function(){
+      $selectedCharacterLength1.text(window.getSelection().toString().length + '文字選択中');
+      $textarea1.keyup(function(){
+        $selectedCharacterLength1.text(window.getSelection().toString().length + '文字選択中');
+      });
+    });
+    $textarea2.keyup(function(){
+      $numberOfCharacter2.text($textarea2.val().length + '文字');
+    });
+    $textarea2.select(function(){
+      $selectedCharacterLength2.text(window.getSelection().toString().length + '文字選択中');
+      $textarea2.keyup(function(){
+        $selectedCharacterLength2.text(window.getSelection().toString().length + '文字選択中');
+      });
+    });
+    $textarea3.keyup(function(){
+      $numberOfCharacter3.text($textarea3.val().length + '文字');
+    });
+    $textarea3.select(function(){
+      $selectedCharacterLength3.text(window.getSelection().toString().length + '文字選択中');
+      $textarea3.keyup(function(){
+        $selectedCharacterLength3.text(window.getSelection().toString().length + '文字選択中');
+      });
+    });
+  });
+  </script>
+</html>
