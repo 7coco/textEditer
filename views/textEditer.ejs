@@ -2,81 +2,17 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <style>
-    #textarea1{
-      width: 500px;
-      height: 500px;
-      font-size: 15px;
-    }
-    #textarea2{
-      width: 500px;
-      height: 230px;
-      font-size: 15px;
-    }
-    #textarea3{
-      width: 500px;
-      height: 230px;
-      font-size: 15px;
-    }
-    #expectedBySFC{
-      position: absolute;
-      left: 530px;
-      top: 75px;
-      font-size: 16px;
-    }
-    #memoText1{
-      position: absolute;
-      top: 100px;
-      left: 530px;
-      font-size: 14px;
-    }
-    #expectedByDepartment{
-      position: absolute;
-      top:295px;
-      left: 530px;
-      font-size: 16px;
-    }
-    #memoText2{
-      position: absolute;
-      left: 530px;
-      top: 320px;
-      font-size: 14px;
-    }
-    #numberOfCharacter1{
-      position: absolute;
-      left: 340px;
-      top: 50px;
-    }
-    #selectedCharacterLength1{
-      position: absolute;
-      top: 50px;
-      left: 410px;
-    }
-    #numberOfCharacter2{
-      position: absolute;
-      top: 825px;
-    }
-    #selectedCharacterLength2{
-      position: absolute;
-      top: 825px;
-      left: 70px;
-    }
-    #numberOfCharacter3{
-      position: absolute;
-      left: 530px;
-      top: 825px;
-    }
-    #selectedCharacterLength3{
-      position: absolute;
-      top: 825px;
-      left: 600px;
-    }
-    </style>
     <title></title>
   </head>
   <body>
-    <h2>志望理由・入学後の学習計画・自己アピール</h2>
-    <textarea id="textarea1"></textarea><br>
+    <h1><%= mainData.name %></h1>
+    <form action="/textEditer/saveMainTitle" method="post">
+      <h2 id="mainTitle"><%= mainData.title %></h2>
+    </form>
+    <form action="/textEditer/saveMain" method="post">
+      <textarea id="textarea1" name="mainText"><%= mainData.body%></textarea><br>
+      <input type="submit" value="保存">
+    </form>
     <div id="numberOfCharacter1">0文字</div>
     <div id="selectedCharacterLength1">０文字選択中</div>
     <textarea id="textarea2"></textarea>
@@ -100,10 +36,22 @@
       自分で学んだ知識やスキルを通じて、どのような卒業プロジェクトをまとめてみたいかを構想<br>
       学問分野にとらわれない幅広い視野を持ち、地球的規模で問題発見・解決できるプロフェッショナルを目指し、新しいことに挑戦するチャレンジ精神を持っている学生を歓迎<br>
     </span>
+    <span id="memoText3">
+      １、志を簡潔に。<br>
+      ２、そのきっかけ(問題発見)。<br>
+	       - そのきっかけから。<br>
+      ３、問題分析<br>
+	       - 問題の原因を分析<br>
+      ４、解決策<br>
+      ５、大学での学び<br>
+	       - なんで慶応なのか。これは4とリンク。<br>
+	       -  具体的に。<br>
+    </span>
   </body>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>
   $(function(){
+    var $mainTitle = $('#mainTitle');
     var $textarea1 = $('#textarea1');
     var $textarea2 = $('#textarea2');
     var $textarea3 = $('#textarea3');
@@ -117,6 +65,7 @@
     var $memoText2 = $('#memoText2');
     var $expectedBySFC = $('#expectedBySFC');
     var $expectedByDepartment = $('#expectedByDepartment');
+    var mainTitle = $mainTitle.val();
     $textarea1.keyup(function(){
       $numberOfCharacter1.text($textarea1.val().length + '文字');
     });
@@ -143,6 +92,13 @@
       $textarea3.keyup(function(){
         $selectedCharacterLength3.text(window.getSelection().toString().length + '文字選択中');
       });
+    });
+    $mainTitle.dblclick(function(){
+      $mainTitle.replaceWith('<input type="text" value="' + mainTitle + '" id="mainTitleValue">');
+    });
+    $('#mainTitleValue').keypress(function(event){
+      console.log(98);
+      console.log(event.which);
     });
   });
   </script>

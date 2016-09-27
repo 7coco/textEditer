@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>New File</title>
+  </head>
+  <body>
+    <form action="/newFile" method="post">
+      <input type="text" placeholder="fileName" name="fileName">
+      <input type="submit" value="作成">
+    </form>
+    <% if(typeof err !== 'undefined'){ %>
+      <%= err %>
+    <% } %>
+  </body>
+</html>
