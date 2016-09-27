@@ -7,7 +7,8 @@
   <body>
     <h1><%= mainData.name %></h1>
     <form action="/textEditer/saveMainTitle" method="post">
-      <h2 id="mainTitle"><%= mainData.title %></h2>
+      <h2 id="mainTitle">たいとるさん。<%= mainData.title %></h2>
+      <input type="hidden" id="hiddenTitle" value="<%= mainData.title %>">
     </form>
     <form action="/textEditer/saveMain" method="post">
       <textarea id="textarea1" name="mainText"><%= mainData.body%></textarea><br>
@@ -65,6 +66,7 @@
     var $memoText2 = $('#memoText2');
     var $expectedBySFC = $('#expectedBySFC');
     var $expectedByDepartment = $('#expectedByDepartment');
+    var $hiddenTitle = $('#hiddenTitle');
     var mainTitle = $mainTitle.val();
     $textarea1.keyup(function(){
       $numberOfCharacter1.text($textarea1.val().length + '文字');
@@ -94,7 +96,8 @@
       });
     });
     $mainTitle.dblclick(function(){
-      $mainTitle.replaceWith('<input type="text" value="' + mainTitle + '" id="mainTitleValue">');
+      console.log($hiddenTitle[0].defaultValue);
+      $mainTitle.replaceWith('<input type="text" value="' + $hiddenTitle[0].defaultValue + '" id="mainTitleValue" name="mainTitle">');
     });
     $('#mainTitleValue').keypress(function(event){
       console.log(98);

@@ -50,11 +50,11 @@ router.get('/', (req, res) => {
 });
 
 router.post('/saveMainTitle', (req, res) => {
-  var fileId = req.session.file_id;
+  var mainId = req.session.main_id;
   var mainTitle = req.body.mainTitle;
-  var saveTitle = 'UPDATE `main` SET `title` = ? WHERE `file_id` = ?';
-  connection.query(saveTitle, [mainTitle, fileId]).then(() => {
-    res.redirect('textEditer.ejs');
+  var saveTitle = 'UPDATE `main` SET `title` = ? WHERE `id` = ?';
+  connection.query(saveTitle, [mainTitle, mainId]).then(() => {
+    res.redirect('/textEditer');
   });
 });
 
