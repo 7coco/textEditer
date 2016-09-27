@@ -59,13 +59,11 @@ router.post('/saveMainTitle', (req, res) => {
 });
 
 router.post('/saveMain', (req, res) => {
-  var title = req.body.title;
   var text = req.body.mainText;
-  var saveText = 'INSERT INTO `main` (`title`, `body`) VALUES (?, ?)';
-  connection.query(saveText, [title, text]).then(() => {
-    res.render('textEditer.ejs', {
-      isSaved : true,
-    });
+  var mainId = req.session.main_id;
+  var saveText = 'UPDATE `main` SET `body` = ? WHERE `id` = ?';
+  connection.query(saveText, [text, mainId]).then(() => {
+    res.redirect('/textEditer');
   });
 });
 
