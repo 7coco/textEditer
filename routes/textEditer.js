@@ -3,6 +3,12 @@ var connection = require('../mysqlConnection');
 
 var router = express.Router();
 
+router.post('/submitMainId', (req, res) => {
+  if(req.session.main_id) delete req.session.main_id;
+  req.session.main_id = req.body.result;
+  res.redirect('/textEditer');
+});
+
 router.get('/', (req, res) => {
   var mainId = req.session.main_id;
   (() => {

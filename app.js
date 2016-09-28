@@ -7,6 +7,7 @@ var path = require('path');
 
 var textEditer = require('./routes/textEditer');
 var newFile = require('./routes/newFile');
+var openFile = require('./routes/openFile');
 
 var app = express();
 
@@ -52,6 +53,7 @@ app.use(session({
 
 app.use('/textEditer', textEditer);
 app.use('/newFile', newFile);
+app.use('/openFile', openFile);
 
 app.use((req, res, next) => {
   console.log('my custom middleware!');
