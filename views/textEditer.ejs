@@ -7,7 +7,7 @@
   <body>
     <h1><%= mainData.name %></h1>
     <form action="/textEditer/saveMainTitle" method="post">
-      <h2 id="mainTitle">たいとるさん。<%= mainData.title %></h2>
+      <h2 id="mainTitle"><%= mainData.title %></h2>
       <input type="hidden" id="hiddenTitle" value="<%= mainData.title %>">
     </form>
     <form action="/textEditer/saveMain" method="post">

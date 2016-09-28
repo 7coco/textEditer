@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <% mainData.forEach((currentValue, index, array) => { %>
+      <div><a name="<%= currentValue.id %>" class="mainId"><%= currentValue.name %><%= currentValue.title%></a></div>
+    <% })%>
+    <form action="/textEditer/submitMainId" name="submitMainId" method="post">
+      <input type="hidden" name="result">
+    </form>
+  </body>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+  $(function(){
+    var $mainId = $('.mainId');
+    $mainId.click(function(){
+      document.submitMainId.result.value = this.name;
+      document.submitMainId.submit();
+    });
+  });
+  </script>
+</html>
