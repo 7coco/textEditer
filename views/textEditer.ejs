@@ -68,6 +68,11 @@
     var $expectedByDepartment = $('#expectedByDepartment');
     var $hiddenTitle = $('#hiddenTitle');
     var mainTitle = $mainTitle.val();
+
+    $numberOfCharacter1.text($textarea1.val().length + '文字');
+    $numberOfCharacter2.text($textarea2.val().length + '文字');
+    $numberOfCharacter3.text($textarea3.val().length + '文字');
+    
     $textarea1.keyup(function(){
       $numberOfCharacter1.text($textarea1.val().length + '文字');
     });
