@@ -2,20 +2,48 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
     <title></title>
   </head>
   <body>
-    <h1><%= mainData.name %></h1>
+    <nav>
+      <div class="nav-wrapper teal lighten-2">
+        <a href="/textEditer" class="brand-logo left"><%= mainData.name %></a>
+        <ul id="nav-mobile" class="right">
+          <li><a href="/openFile">Open File</a></li>
+          <li><a href="/newFile">New File</a></li>
+        </ul>
+      </div>
+    </nav>
     <form action="/textEditer/saveMainTitle" method="post">
-      <h2 id="mainTitle"><%= mainData.title %></h2>
+      <h4 id="mainTitle"><%= mainData.title %></h4>
       <input type="hidden" id="hiddenTitle" value="<%= mainData.title %>">
     </form>
-    <form action="/textEditer/saveMain" method="post">
-      <textarea id="textarea1" name="mainText"><%= mainData.body%></textarea><br>
-      <input type="submit" value="保存">
-    </form>
-    <div id="numberOfCharacter1">0文字</div>
-    <div id="selectedCharacterLength1">０文字選択中</div>
+    <div class="row">
+      <form action="/textEditer/saveMain" method="post" class="col s12">
+        <div class="input-field col s12">
+          <textarea id="textarea1" name="mainText" class="materialize-textarea"><%= mainData.body%></textarea>
+          <label for="textarea1">本文</label>
+        </div>
+        <button type="submit" class="btn waves-effect waves-light"><i class="material-icons right">send</i>保存</button>
+        <button id="writeFile" class="btn waves-effect waves-light modal-trigger" data-target="writeFileModal">メインの内容をテキストファイルに出力
+          <i class="material-icons right">input</i>
+        </button>
+        <span id="numberOfCharacter1">0文字</span>
+        <span id="selectedCharacterLength1">０文字選択中</span>
+      </form>
+    </div>
+    <div id="writeFileModal" class="modal">
+      <div class="modal-content">
+        <form action="/textEditer/writeFile" method="post" name="writeFile">
+          <input type="text">
+        </form="">
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+      </div>
+    </div>
     <textarea id="textarea2"></textarea>
     <textarea id="textarea3"></textarea>
     <div id="numberOfCharacter2">0文字</div>
@@ -49,7 +77,8 @@
 	       -  具体的に。<br>
     </span>
   </body>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript" src="js/materialize.min.js"></script>
   <script>
   $(function(){
     var $mainTitle = $('#mainTitle');
@@ -67,12 +96,19 @@
     var $expectedBySFC = $('#expectedBySFC');
     var $expectedByDepartment = $('#expectedByDepartment');
     var $hiddenTitle = $('#hiddenTitle');
+    var $writeFile = $('#writeFile');
     var mainTitle = $mainTitle.val();
+    $('#textarea1').trigger('autoresize');
+
+    $(document).ready(function(){
+      // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+      $('.modal-trigger').leanModal();
+    });
 
     $numberOfCharacter1.text($textarea1.val().length + '文字');
     $numberOfCharacter2.text($textarea2.val().length + '文字');
     $numberOfCharacter3.text($textarea3.val().length + '文字');
-    
+
     $textarea1.keyup(function(){
       $numberOfCharacter1.text($textarea1.val().length + '文字');
     });
@@ -101,13 +137,14 @@
       });
     });
     $mainTitle.dblclick(function(){
-      console.log($hiddenTitle[0].defaultValue);
       $mainTitle.replaceWith('<input type="text" value="' + $hiddenTitle[0].defaultValue + '" id="mainTitleValue" name="mainTitle">');
     });
-    $('#mainTitleValue').keypress(function(event){
-      console.log(98);
-      console.log(event.which);
+    /*
+    $writeFile.click(function(){
+      document.writeFile.result.value = $textarea1.val();
+      document.writeFile.submit();
     });
+    */
   });
   </script>
 </html>

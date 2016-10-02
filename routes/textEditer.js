@@ -1,7 +1,8 @@
-var express = require('express');
-var connection = require('../mysqlConnection');
+const express = require('express');
+const connection = require('../mysqlConnection');
+const fs = require('fs-promise');
 
-var router = express.Router();
+const router = express.Router();
 
 router.post('/submitMainId', (req, res) => {
   if(req.session.main_id) delete req.session.main_id;
@@ -10,12 +11,12 @@ router.post('/submitMainId', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-  var mainId = req.session.main_id;
+  const mainId = req.session.main_id;
   (() => {
-    var promise = new Promise((resolve) => {
-      var selectMainData = 'SELECT * FROM `main` WHERE `id` = ?';
+    const promise = new Promise((resolve) => {
+      const selectMainData = 'SELECT * FROM `main` WHERE `id` = ?';
       connection.query(selectMainData, [mainId]).then((result) => {
-        var values = {
+        const values = {
           mainData : result[0][0],
         };
         resolve(values);
@@ -27,8 +28,8 @@ router.get('/', (req, res) => {
     });
     return promise;
   })().then((values) => {
-    var promise = new Promise((resolve) => {
-      var selectSubData = 'SELECT * FROM `sub` WHERE `main_id` = ?';
+    const promise = new Promise((resolve) => {
+      const selectSubData = 'SELECT * FROM `sub` WHERE `main_id` = ?';
       connection.query(selectSubData, [mainId]).then((result) => {
         values.subData = result[0];
         resolve(values);
@@ -40,7 +41,7 @@ router.get('/', (req, res) => {
     });
     return promise;
   }).then((values) => {
-    var selectMemoData = 'SELECT * FROM `memo` WHERE `main_id` = ?';
+    const selectMemoData = 'SELECT * FROM `memo` WHERE `main_id` = ?';
     connection.query(selectMemoData, [mainId]).then((result) => {
       res.render('textEditer', {
         mainData : values.mainData,
@@ -56,21 +57,25 @@ router.get('/', (req, res) => {
 });
 
 router.post('/saveMainTitle', (req, res) => {
-  var mainId = req.session.main_id;
-  var mainTitle = req.body.mainTitle;
-  var saveTitle = 'UPDATE `main` SET `title` = ? WHERE `id` = ?';
+  const mainId = req.session.main_id;
+  const mainTitle = req.body.mainTitle;
+  const saveTitle = 'UPDATE `main` SET `title` = ? WHERE `id` = ?';
   connection.query(saveTitle, [mainTitle, mainId]).then(() => {
     res.redirect('/textEditer');
   });
 });
 
 router.post('/saveMain', (req, res) => {
-  var text = req.body.mainText;
-  var mainId = req.session.main_id;
-  var saveText = 'UPDATE `main` SET `body` = ? WHERE `id` = ?';
+  const text = req.body.mainText;
+  const mainId = req.session.main_id;
+  const saveText = 'UPDATE `main` SET `body` = ? WHERE `id` = ?';
   connection.query(saveText, [text, mainId]).then(() => {
     res.redirect('/textEditer');
   });
+});
+
+router.post('/writeFile', (req, res) => {
+  const text = req.body.result;
 });
 
 module.exports = router;

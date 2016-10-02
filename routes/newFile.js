@@ -1,17 +1,17 @@
-var express = require('express');
-var connection = require('../mysqlConnection');
+const express = require('express');
+const connection = require('../mysqlConnection');
 
-var router = express.Router();
+const router = express.Router();
 
 router.get('/', (req, res) => {
   res.render('newFile.ejs');
 });
 
 router.post('/', (req, res) => {
-  var fileName = req.body.fileName;
+  const fileName = req.body.fileName;
   (() => {
-    var promise = new Promise((resolve, reject) => {
-      var createNewFile = 'INSERT INTO `main` (`name`, `title`) VALUES (?, ?)';
+    const promise = new Promise((resolve, reject) => {
+      const createNewFile = 'INSERT INTO `main` (`name`, `title`) VALUES (?, ?)';
       connection.query(createNewFile, [fileName, 'NO TITLE']).then((result) => {
         req.session.main_id = result[0].insertId;
         resolve();

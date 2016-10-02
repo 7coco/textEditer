@@ -1,19 +1,19 @@
-var express = require('express');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var session = require('express-session');
-var MySQLStore = require('express-mysql-session')(session);
-var path = require('path');
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+const path = require('path');
 
-var textEditer = require('./routes/textEditer');
-var newFile = require('./routes/newFile');
-var openFile = require('./routes/openFile');
+const textEditer = require('./routes/textEditer');
+const newFile = require('./routes/newFile');
+const openFile = require('./routes/openFile');
 
-var app = express();
+const app = express();
 
-var logger = require('morgan');
+const logger = require('morgan');
 
-var options = {
+const options = {
   host : 'localhost',
   port : 3306,
   user : 'root',
@@ -28,17 +28,17 @@ var options = {
     },
   },
 };
-var sessionStore = new MySQLStore(options);
+const sessionStore = new MySQLStore(options);
 
 
-app.set('views', path.join(__dirname + '/views'));
+app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
 
 // middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended : true }));
 app.use(logger('dev'));
-app.use(express.static(__dirname + '/views'));
+app.use(express.static(path.join(__dirname, '/views')));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({

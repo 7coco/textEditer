@@ -1,4 +1,4 @@
-var connection = require('mysql-promise')();
+const connection = require('mysql-promise')();
 
 connection.configure({
   host : 'localhost',
