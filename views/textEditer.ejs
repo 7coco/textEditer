@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>
     <title></title>
   </head>
   <body>
@@ -27,8 +27,8 @@
           <label for="textarea1">本文</label>
         </div>
         <button type="submit" class="btn waves-effect waves-light"><i class="material-icons right">send</i>保存</button>
-        <button id="writeFile" class="btn waves-effect waves-light modal-trigger" data-target="writeFileModal">メインの内容をテキストファイルに出力
-          <i class="material-icons right">input</i>
+        <button class="btn waves-effect waves-light modal-trigger" data-target="writeFileModal">本文の内容をテキストファイルに出力
+          <i class="material-icons right">description</i>
         </button>
         <span id="numberOfCharacter1">0文字</span>
         <span id="selectedCharacterLength1">０文字選択中</span>
@@ -36,14 +36,31 @@
     </div>
     <div id="writeFileModal" class="modal">
       <div class="modal-content">
-        <form action="/textEditer/writeFile" method="post" name="writeFile">
-          <input type="text">
-        </form="">
+        <div class="input-field col s6">
+          <input type="text" id="filePath" placeholder="Documents/" value="Documents/">
+          <label for="filePath">ファイルパス</label>
+        </div>
+        <div class="input-field col s6">
+          <input type="text" id="textFileName" placeholder="hoge.txt">
+          <label for="textFileName">ファイル名</label>
+        </div>
       </div>
       <div class="modal-footer">
-        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat" id="writeFile">出力
+          <i class="material-icons right">input</i>
+        </a>
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" id="appendFile">既存ファイルに追記
+          <i class="material-icons right">mode_edit</i>
+        </a>
       </div>
     </div>
+    <% if(typeof successWriteFile !== 'undefined'){ %>
+      <div id="successWriteFileModal" class="modal">
+        <div class="modal-content">
+          <a id="successWriteFile" name="<%= successWriteFile %>"><%= successWriteFile %></a>
+        </div>
+      </div>
+    <% } %>
     <textarea id="textarea2"></textarea>
     <textarea id="textarea3"></textarea>
     <div id="numberOfCharacter2">0文字</div>
@@ -76,9 +93,19 @@
 	       - なんで慶応なのか。これは4とリンク。<br>
 	       -  具体的に。<br>
     </span>
+    <form action="/textEditer/writeFile" method="post" name="writeFile">
+      <input type="hidden" name="filePath">
+      <input type="hidden" name="textFileName">
+      <input type="hidden" name="mainText">
+    </form>
+    <form action="/textEditer/appendFile" method="post" name="appendFile">
+      <input type="hidden" name="filePath">
+      <input type="hidden" name="textFileName">
+      <input type="hidden" name="mainText">
+    </form>
   </body>
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script type="text/javascript" src="js/materialize.min.js"></script>
+  <script type="text/javascript" src="/js/materialize.min.js"></script>
   <script>
   $(function(){
     var $mainTitle = $('#mainTitle');
@@ -97,13 +124,16 @@
     var $expectedByDepartment = $('#expectedByDepartment');
     var $hiddenTitle = $('#hiddenTitle');
     var $writeFile = $('#writeFile');
+    var $appendFile = $('#appendFile');
     var mainTitle = $mainTitle.val();
     $('#textarea1').trigger('autoresize');
 
     $(document).ready(function(){
-      // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
       $('.modal-trigger').leanModal();
     });
+    if($('#successWriteFile').length > 0){
+      $('#successWriteFileModal').openModal();
+    }
 
     $numberOfCharacter1.text($textarea1.val().length + '文字');
     $numberOfCharacter2.text($textarea2.val().length + '文字');
@@ -139,12 +169,18 @@
     $mainTitle.dblclick(function(){
       $mainTitle.replaceWith('<input type="text" value="' + $hiddenTitle[0].defaultValue + '" id="mainTitleValue" name="mainTitle">');
     });
-    /*
     $writeFile.click(function(){
-      document.writeFile.result.value = $textarea1.val();
+      document.writeFile.filePath.value = $('#filePath').val();
+      document.writeFile.textFileName.value = $('#textFileName').val();
+      document.writeFile.mainText.value = $textarea1.val();
       document.writeFile.submit();
     });
-    */
+    $appendFile.click(function(){
+      document.appendFile.filePath.value = $('#filePath').val();
+      document.appendFile.textFileName.value = $('#textFileName').val();
+      document.appendFile.mainText.value = $textarea1.val();
+      document.appendFile.submit();
+    });
   });
   </script>
 </html>
