@@ -17,18 +17,22 @@
       </div>
     </nav>
     <form action="/textEditer/saveMainTitle" method="post">
-      <h4 id="mainTitle"><%= mainData.title %></h4>
+      <div class="row">
+        <h4 id="mainTitle"><%= mainData.title %></h4>
+      </div>
+      <input type="hidden" name="mainId" value="<%= mainData.id %>">
       <input type="hidden" id="hiddenTitle" value="<%= mainData.title %>">
     </form>
     <div class="row">
       <form action="/textEditer/saveMain" method="post" class="col s12">
-        <div class="input-field col s12">
+        <span class="input-field col s12">
           <textarea id="textarea1" name="mainText" class="materialize-textarea"><%= mainData.body%></textarea>
           <label for="textarea1">本文</label>
-        </div>
-        <button type="submit" class="btn waves-effect waves-light"><i class="material-icons right">send</i>保存</button>
+          <input type="hidden" name="mainId" value="<%= mainData.id %>">
+        </span>
+        <button type="submit" class="btn waves-effect waves-light"><i class="material-icons right">save</i>保存</button>
         <button class="btn waves-effect waves-light modal-trigger" data-target="writeFileModal">本文の内容をテキストファイルに出力
-          <i class="material-icons right">description</i>
+          <i class="material-icons right">attachment</i>
         </button>
         <span id="numberOfCharacter1">0文字</span>
         <span id="selectedCharacterLength1">０文字選択中</span>
@@ -46,8 +50,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat" id="writeFile">出力
-          <i class="material-icons right">input</i>
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat" id="writeFile">書き出し
+          <i class="material-icons right">description</i>
         </a>
         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" id="appendFile">既存ファイルに追記
           <i class="material-icons right">mode_edit</i>
@@ -93,6 +97,7 @@
 	       - なんで慶応なのか。これは4とリンク。<br>
 	       -  具体的に。<br>
     </span>
+    <button class="btn waves-effect waves-light red accent-2" id="delete" name="<%= mainData.id %>"><i class="material-icons right">delete</i>ファイルの削除</button>
     <form action="/textEditer/writeFile" method="post" name="writeFile">
       <input type="hidden" name="filePath">
       <input type="hidden" name="textFileName">
@@ -103,6 +108,10 @@
       <input type="hidden" name="textFileName">
       <input type="hidden" name="mainText">
     </form>
+    <form action="/textEditer/deleteFile" method="post" name="deleteFile">
+      <input type="hidden" name="mainId">
+    </form>
+    <input type="hidden" id="formerMainText" value="<%= mainData.body %>">
   </body>
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script type="text/javascript" src="/js/materialize.min.js"></script>
@@ -125,7 +134,10 @@
     var $hiddenTitle = $('#hiddenTitle');
     var $writeFile = $('#writeFile');
     var $appendFile = $('#appendFile');
+    var $formerMainText = $('#formerMainText');
+    var $deleteButton = $('#delete');
     var mainTitle = $mainTitle.val();
+
     $('#textarea1').trigger('autoresize');
 
     $(document).ready(function(){
@@ -134,7 +146,14 @@
     if($('#successWriteFile').length > 0){
       $('#successWriteFileModal').openModal();
     }
-
+    $('textarea').keyup(function(){
+      if($formerMainText[0].defaultValue !== $textarea1.val()){
+        $('#notSaveAlert').detach();
+        $mainTitle.append('<span class="new badge red" id="notSaveAlert" data-badge-caption="未保存"></span>');
+      }else{
+        $('#notSaveAlert').detach();
+      }
+    });
     $numberOfCharacter1.text($textarea1.val().length + '文字');
     $numberOfCharacter2.text($textarea2.val().length + '文字');
     $numberOfCharacter3.text($textarea3.val().length + '文字');
@@ -180,6 +199,10 @@
       document.appendFile.textFileName.value = $('#textFileName').val();
       document.appendFile.mainText.value = $textarea1.val();
       document.appendFile.submit();
+    });
+    $deleteButton.click(function(){
+      document.deleteFile.mainId.value = this.name;
+      document.deleteFile.submit();
     });
   });
   </script>

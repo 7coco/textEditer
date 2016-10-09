@@ -75,7 +75,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/saveMainTitle', (req, res) => {
-  const mainId = req.session.main_id;
+  const mainId = req.body.mainId;
   const mainTitle = req.body.mainTitle;
   const saveTitle = 'UPDATE `main` SET `title` = ? WHERE `id` = ?';
   connection.query(saveTitle, [mainTitle, mainId]).then(() => {
@@ -85,8 +85,9 @@ router.post('/saveMainTitle', (req, res) => {
 
 router.post('/saveMain', (req, res) => {
   const text = req.body.mainText;
-  const mainId = req.session.main_id;
+  const mainId = req.body.mainId;
   const saveText = 'UPDATE `main` SET `body` = ? WHERE `id` = ?';
+  req.session.main_id = mainId;
   connection.query(saveText, [text, mainId]).then(() => {
     res.redirect('/textEditer');
   });
@@ -135,6 +136,25 @@ router.post('/appendFile', (req, res) => {
     });
   }).catch((err) => {
     res.render('textEditer', { err });
+  });
+});
+
+router.post('/deleteFile', (req, res) => {
+  const mainId = req.body.mainId;
+  (() => new Promise((resolve) => {
+    const deleteMainData = 'DELETE FROM `main` WHERE `id` = ?';
+    connection.query(deleteMainData, [mainId]).then(() => {
+      resolve();
+    }, (err) => {
+      res.render('ERROR', { err });
+    });
+  }))().then(() => {
+    const deleteSubAndMemoData = 'DELETE FROM `sub`, `memo` WHERE `main_id` = ?';
+    connection.query(deleteSubAndMemoData, [mainId]).then(() => {
+      res.redirect('/openFile');
+    }, () => {
+      res.redirect('/openFile');
+    });
   });
 });
 
