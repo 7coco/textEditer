@@ -7,8 +7,10 @@
     <title></title>
   </head>
   <body>
+
+    <!-- ヘッダー部分 -->
     <nav>
-      <div class="nav-wrapper teal lighten-2">
+      <div class="nav-wrapper teal lighten-1">
         <a href="/textEditer" class="brand-logo left"><%= mainData.name %></a>
         <ul id="nav-mobile" class="right">
           <li><a href="/openFile">Open File</a></li>
@@ -16,6 +18,8 @@
         </ul>
       </div>
     </nav>
+
+    <!-- タイトル表示、編集保存部分 -->
     <form action="/textEditer/saveMainTitle" method="post">
       <div class="row">
         <h4 id="mainTitle"><%= mainData.title %></h4>
@@ -23,41 +27,145 @@
       <input type="hidden" name="mainId" value="<%= mainData.id %>">
       <input type="hidden" id="hiddenTitle" value="<%= mainData.title %>">
     </form>
-    <div class="row">
-      <form action="/textEditer/saveMain" method="post" class="col s12">
-        <span class="input-field col s12">
+
+    <!-- 本体 -->
+    <div class="row col s12">
+
+      <!-- 本文編集、保存 -->
+      <form action="/textEditer/saveMain" method="post" class="col s7" name="saveMain">
+        <div class="input-field">
           <textarea id="textarea1" name="mainText" class="materialize-textarea"><%= mainData.body%></textarea>
           <label for="textarea1">本文</label>
-          <input type="hidden" name="mainId" value="<%= mainData.id %>">
-        </span>
-        <button type="submit" class="btn waves-effect waves-light"><i class="material-icons right">save</i>保存</button>
-        <button class="btn waves-effect waves-light modal-trigger" data-target="writeFileModal">本文の内容をテキストファイルに出力
+        </div>
+        <input type="hidden" name="mainId" value="<%= mainData.id %>">
+      </form>
+
+      <!-- メモの表示 -->
+      <div class="col s5">
+        <% if(typeof memoData !== 'undefined'){ %>
+          <h3>Memo</h3>
+          <ul class="collapsible" data-collapsible="expandable">
+            <% memoData.forEach((currentValue, index, array) => { %>
+              <li>
+                <div class="collapsible-header"><%= currentValue.title %></div>
+                <div class="collapsible-body">
+                  <p><%= currentValue.body %><br>
+                    <a class="btn-floating teal lighten-1" id="memoEdit" name="<%= currentValue.id %>"><i class="material-icons">edit_mode</i></a>
+                    <a class="btn-floating teal lighten-1" id="memoDelete" name="<%= currentValue.id %>">delete</a><i class="material-icons">delete</i>
+                  </p>
+                </div>
+              </li>
+            <% })%>
+          </ul>
+        <% } %>
+      </div>
+
+      <!-- サブテキストの表示 -->
+      <div class="col s5">
+        <% if(typeof subData !== 'undefined'){ %>
+          <h3>SubText</h3>
+          <ul class="collapsible" data-collapsible="expandable">
+            <% subData.forEach((currentValue, index, array) => { %>
+              <li>
+                <div class="collapsible-header"><%= currentValue.title %>
+                  <a class="btn-floating teal lighten-1" id="subEdit" name="<%= subData.id %>"><i class="material-icons">edit_mode</i></a>
+                  <a class="btn-floating teal lighten-1" id="SubDelete" name="<%= subData.id %>"><i class="material-icons">delete</i></a>
+                </div>
+                <div class="collapsible-body">
+                  <p><%= currentValue.body %></p>
+                </div>
+              </li>
+            <% })%>
+          </ul>
+        <% } %>
+      </div>
+
+      <!-- メモとサブテキストの追加ボタン -->
+      <div class="row">
+        <a class="dropdown-button btn-floating waves-effect waves-light teal lighten-1" data-activates="addMemoOrSub" data-beloworigin="true" data-constrainwidth="false"><i class="material-icons">add</i></a>
+        <ul id="addMemoOrSub" class="dropdown-content">
+          <li><a class="modal-trigger" href="#createMemo">Add Memo</a></li>
+          <li><a class="modal-trigger" href="#createSub">Add Sub Text</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- footer部分 -->
+    <div class="row">
+      <div class="col s7">
+        <button id="save" class="btn waves-effect waves-light"><i class="material-icons right">save</i>保存</button>
+        </form>
+        <button class="btn waves-effect waves-light modal-trigger" data-target="writeFileModal">テキストファイルに出力
           <i class="material-icons right">attachment</i>
         </button>
         <span id="numberOfCharacter1">0文字</span>
         <span id="selectedCharacterLength1">０文字選択中</span>
-      </form>
+      </div>
     </div>
+
+    <!-- ファイルに書き出しするときのモーダル部分 -->
     <div id="writeFileModal" class="modal">
       <div class="modal-content">
         <div class="input-field col s6">
-          <input type="text" id="filePath" placeholder="Documents/" value="Documents/">
+          <input type="text" id="filePath" placeholder="ex.) Documents/" value="Documents/">
           <label for="filePath">ファイルパス</label>
         </div>
         <div class="input-field col s6">
-          <input type="text" id="textFileName" placeholder="hoge.txt">
+          <input type="text" id="textFileName" placeholder="ex.) hoge.txt">
           <label for="textFileName">ファイル名</label>
         </div>
       </div>
       <div class="modal-footer">
-        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat" id="writeFile">書き出し
-          <i class="material-icons right">description</i>
-        </a>
-        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" id="appendFile">既存ファイルに追記
-          <i class="material-icons right">mode_edit</i>
-        </a>
+        <div class="row">
+          <a href="#!" class=" modal-action modal-close waves-effect waves-lighten btn teal lighten-1" id="writeFile">書き出し
+            <i class="material-icons right">description</i>
+          </a>
+          <a href="#!" class="modal-action modal-close waves-effect waves-lighten btn teal lighten-1" id="appendFile">既存ファイルに追記
+            <i class="material-icons right">mode_edit</i>
+          </a>
+        </div>
       </div>
     </div>
+
+    <!-- メモを作る時のモーダル -->
+    <div id="createMemo" class="modal">
+      <div class="modal-content">
+        <div class="input-field">
+          <input type="text" id="newMemoTitle">
+          <label for="newMemoTitle">メモのタイトル</label>
+        </div>
+        <div class="input-field">
+          <textarea class="materialize-textarea" id="newMemoText"></textarea>
+          <label for="newMemoText">メモの内容</label>.
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class=" modal-action modal-close waves-effect waves-light btn teal lighten-1 white-text" id="createMemoButton">作成
+            <i class="material-icons right">note_add</i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- サブテキストを作る時のモーダル -->
+    <div id="createSub" class="modal">
+      <div class="modal-content">
+        <div class="input-field">
+          <input type="text" id="newSubTitle">
+          <label for="newSubTitle">サブテキストのタイトル</label>
+        </div>
+        <div class="input-field">
+          <textarea class="materialize-textarea" id="newSubText"></textarea>
+          <label for="newSubText">サブテキストの内容</label>.
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class=" modal-action modal-close waves-effect waves-light btn teal lighten-1 white-text" id="createSubButton">作成
+            <i class="material-icons right">note_add</i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ファイルへの書き出しが成功した時の表示 -->
     <% if(typeof successWriteFile !== 'undefined'){ %>
       <div id="successWriteFileModal" class="modal">
         <div class="modal-content">
@@ -65,52 +173,47 @@
         </div>
       </div>
     <% } %>
-    <textarea id="textarea2"></textarea>
-    <textarea id="textarea3"></textarea>
-    <div id="numberOfCharacter2">0文字</div>
-    <div id="selectedCharacterLength2">0文字選択中</div>
-    <div id="numberOfCharacter3">0文字</div>
-    <div id="selectedCharacterLength3">0文字選択中</div>
-    <span id="expectedBySFC">＊SFCが期待する学生＊</span>
-    <span id="memoText1">
-      現代社会が直面する様々な問題は多岐にわたる複雑な要因が絡み合い、どの一つをとってみても個別学問の枠組みを大きく超えている。<br>
-      SFCでは、現実の諸問題を個別学問の域で切り取るのではなく、関係する既存の書学問の成果を知識と技術の体系として新たに再編成し、豊かな発想と広い視野から問題を捉えて解決に導く能力を自ら学び取る「問題発見解決型」「創造性開発型」の教育を重視している。<br>
-      学部の理念や内容をよく理解した上で「SFCでこんなことを学びたい」「問題意識」「テーマ」<br>
-      「自らの手で未来を拓く力を磨いてほしい」
-    </span>
-    <span id="expectedByDepartment">＊環境情報学部が期待する学生＊</span>
-    <span id="memoText2">
-      「環境と情報の時代」におけるグローバル社会の開拓者の育成。<br>
-      未来を自ら開拓できるたくましい力と人間性の確立を目指し、かつ、夢を実現し、問題を発見し解決する、実践的な力を身につける。<br>
-      自分の問題意識を明確にし、目標を立て、その実現のためになすべきとや将来参加したいプロジェクトについて考える<br>
-      自分で学んだ知識やスキルを通じて、どのような卒業プロジェクトをまとめてみたいかを構想<br>
-      学問分野にとらわれない幅広い視野を持ち、地球的規模で問題発見・解決できるプロフェッショナルを目指し、新しいことに挑戦するチャレンジ精神を持っている学生を歓迎<br>
-    </span>
-    <span id="memoText3">
-      １、志を簡潔に。<br>
-      ２、そのきっかけ(問題発見)。<br>
-	       - そのきっかけから。<br>
-      ３、問題分析<br>
-	       - 問題の原因を分析<br>
-      ４、解決策<br>
-      ５、大学での学び<br>
-	       - なんで慶応なのか。これは4とリンク。<br>
-	       -  具体的に。<br>
-    </span>
+
+    <!-- ファイル削除ボタン -->
     <button class="btn waves-effect waves-light red accent-2" id="delete" name="<%= mainData.id %>"><i class="material-icons right">delete</i>ファイルの削除</button>
+
+    <!-- ファイルへの書き出しに使用する隠しフォーム -->
     <form action="/textEditer/writeFile" method="post" name="writeFile">
       <input type="hidden" name="filePath">
       <input type="hidden" name="textFileName">
       <input type="hidden" name="mainText">
     </form>
+
+    <!-- 既存ファイルへの追記に使用する隠しフォーム -->
     <form action="/textEditer/appendFile" method="post" name="appendFile">
       <input type="hidden" name="filePath">
       <input type="hidden" name="textFileName">
       <input type="hidden" name="mainText">
     </form>
+
+    <!-- ファイルデータの削除に使用する隠しフォーム -->
     <form action="/textEditer/deleteFile" method="post" name="deleteFile">
       <input type="hidden" name="mainId">
     </form>
+
+    <!-- メモ作成時に使用する隠しフォーム -->
+    <form action="/textEditer/createMemo" method="post" name="createMemo">
+      <input type="hidden" name="newMemoTitle">
+      <input type="hidden" name="newMemoText">
+      <input type="hidden" name="mainId" value="<%= mainData.id %>">
+    </form>
+
+    <!-- メモ削除時に使用する隠しフォーム -->
+    <form action="/textEditer/deleteMemo" method="post" name="deleteMemo">
+      <input type="hidden" name="memoDataId">
+    </form>
+
+    <!-- メモ編集時に使用する隠しフォーム -->
+    <form action="/textEditer/editMemo" method="post" name="editMemo">
+      <input type="hidden" name="memoDataId"">
+    </form>
+
+    <!-- 未保存状態か判定するための隠しテキストデータ -->
     <input type="hidden" id="formerMainText" value="<%= mainData.body %>">
   </body>
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -119,8 +222,6 @@
   $(function(){
     var $mainTitle = $('#mainTitle');
     var $textarea1 = $('#textarea1');
-    var $textarea2 = $('#textarea2');
-    var $textarea3 = $('#textarea3');
     var $numberOfCharacter1 = $('#numberOfCharacter1');
     var $selectedCharacterLength1 = $('#selectedCharacterLength1');
     var $numberOfCharacter2 = $('#numberOfCharacter2');
@@ -136,6 +237,12 @@
     var $appendFile = $('#appendFile');
     var $formerMainText = $('#formerMainText');
     var $deleteButton = $('#delete');
+    var $saveButton = $('#save');
+    var $createMemoButton = $('#createMemoButton');
+    var $newMemoText = $('#newMemoText');
+    var $newMemoTitle = $('#newMemoTitle');
+    var $deleteMemoButton = $('#memoDelete');
+    var $editMemoButton = $('#memoEdit');
     var mainTitle = $mainTitle.val();
 
     $('#textarea1').trigger('autoresize');
@@ -149,14 +256,12 @@
     $('textarea').keyup(function(){
       if($formerMainText[0].defaultValue !== $textarea1.val()){
         $('#notSaveAlert').detach();
-        $mainTitle.append('<span class="new badge red" id="notSaveAlert" data-badge-caption="未保存"></span>');
+        $('body').append('<div class="fixed-action-btn" id="notSaveAlert" style="bottom: 10px; right: 24px;"><a class="red white-text">未保存</a></div>');
       }else{
         $('#notSaveAlert').detach();
       }
     });
     $numberOfCharacter1.text($textarea1.val().length + '文字');
-    $numberOfCharacter2.text($textarea2.val().length + '文字');
-    $numberOfCharacter3.text($textarea3.val().length + '文字');
 
     $textarea1.keyup(function(){
       $numberOfCharacter1.text($textarea1.val().length + '文字');
@@ -165,24 +270,6 @@
       $selectedCharacterLength1.text(window.getSelection().toString().length + '文字選択中');
       $textarea1.keyup(function(){
         $selectedCharacterLength1.text(window.getSelection().toString().length + '文字選択中');
-      });
-    });
-    $textarea2.keyup(function(){
-      $numberOfCharacter2.text($textarea2.val().length + '文字');
-    });
-    $textarea2.select(function(){
-      $selectedCharacterLength2.text(window.getSelection().toString().length + '文字選択中');
-      $textarea2.keyup(function(){
-        $selectedCharacterLength2.text(window.getSelection().toString().length + '文字選択中');
-      });
-    });
-    $textarea3.keyup(function(){
-      $numberOfCharacter3.text($textarea3.val().length + '文字');
-    });
-    $textarea3.select(function(){
-      $selectedCharacterLength3.text(window.getSelection().toString().length + '文字選択中');
-      $textarea3.keyup(function(){
-        $selectedCharacterLength3.text(window.getSelection().toString().length + '文字選択中');
       });
     });
     $mainTitle.dblclick(function(){
@@ -203,6 +290,26 @@
     $deleteButton.click(function(){
       document.deleteFile.mainId.value = this.name;
       document.deleteFile.submit();
+    });
+    $saveButton.click(function(){
+      document.saveMain.submit();
+    });
+    $createMemoButton.click(function(){
+      var newMemoTitle = $newMemoTitle.val();
+      var newMemoText = $newMemoText.val();
+      console.log(newMemoText);
+      console.log(newMemoTitle);
+      document.createMemo.newMemoTitle.value = newMemoTitle;
+      document.createMemo.newMemoText.value = newMemoText;
+      document.createMemo.submit();
+    });
+    $deleteMemoButton.click(function(){
+      document.deleteMemo.memoDataId.value = this.name;
+      document.deleteMemo.submit();
+    });
+    $editMemoButton.click(function(){
+      document.editMemo.memoDataId.value = this.name;
+      document.editMemo.submit();
     });
   });
   </script>

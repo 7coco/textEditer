@@ -158,4 +158,45 @@ router.post('/deleteFile', (req, res) => {
   });
 });
 
+router.post('/createMemo', (req, res) => {
+  const newMemoTitle = req.body.newMemoTitle;
+  const newMemoText = req.body.newMemoText;
+  const mainId = req.body.mainId;
+  const createMemo = 'INSERT INTO `memo` (`main_id`, `title`, `body`) VALUES (?, ?, ?)';
+  connection.query(createMemo, [mainId, newMemoTitle, newMemoText]).then(() => {
+    doSelectMainData(req, res)
+    .then(doSelectSubData)
+    .then(doSelectMemoData)
+    .then((values) => {
+      res.render('textEditer', {
+        mainData : values.mainData,
+        memoData : values.memoData,
+        subData : values.subData,
+      });
+    });
+  });
+});
+
+router.post('/deleteMemo', (req, res) => {
+  const memoDataId = req.body.memoDataId;
+  console.log("idは" + memoDataId);
+  const deleteMemoQuery = 'DELETE FROM `memo` WHERE `id` = ?';
+  connection.query(deleteMemoQuery, [memoDataId]).then(() => {
+    doSelectMainData(req, res)
+    .then(doSelectSubData)
+    .then(doSelectMemoData)
+    .then((values) => {
+      res.render('textEditer', {
+        mainData : values.mainData,
+        memoData : values.memoData,
+        subData : values.subData,
+      });
+    });
+  });
+});
+
+router.post('memoEdit', (req, res) => {
+
+});
+
 module.exports = router;
