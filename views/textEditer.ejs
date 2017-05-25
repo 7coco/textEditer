@@ -49,10 +49,9 @@
               <li>
                 <div class="collapsible-header"><%= currentValue.title %></div>
                 <div class="collapsible-body">
-                  <p><%= currentValue.body %><br>
-                    <a class="btn-floating teal lighten-1" id="memoEdit" name="<%= currentValue.id %>"><i class="material-icons">edit_mode</i></a>
-                    <a class="btn-floating teal lighten-1" id="memoDelete" name="<%= currentValue.id %>">delete</a><i class="material-icons">delete</i>
-                  </p>
+                  <textarea class="materialize-textarea"><%= currentValue.body %></textarea>
+                  <a class="btn-floating teal lighten-1" id="memoEdit" name="<%= currentValue.id %>"><i class="material-icons">edit_mode</i></a>
+                  <a class="btn-floating teal lighten-1" id="memoDelete" name="<%= currentValue.id %>">delete</a><i class="material-icons">delete</i>
                 </div>
               </li>
             <% })%>
