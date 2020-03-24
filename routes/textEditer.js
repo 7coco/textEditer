@@ -195,8 +195,18 @@ router.post('/deleteMemo', (req, res) => {
   });
 });
 
-router.post('memoEdit', (req, res) => {
-
+router.post('/editMemo', (req, res) => {
+    const memoText = req.body.memoText;
+    const memoDataId = req.body.memoDataId;
+    const editMemoQuery = 'UPDATE `memo` SET `body` = ? WHERE `id` = ?';
+    connection.query(editMemoQuery, [memoText, memoDataId]).then(() => {
+      doSelectMainData(req, res)
+      .then(doSelectSubData)
+      .then(doSelectMemoData)
+      .then((values) => {
+        res.redirect('/textEditer');
+      });
+    });
 });
 
 module.exports = router;

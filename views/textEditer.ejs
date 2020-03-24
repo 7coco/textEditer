@@ -49,9 +49,9 @@
               <li>
                 <div class="collapsible-header"><%= currentValue.title %></div>
                 <div class="collapsible-body">
-                  <textarea class="materialize-textarea"><%= currentValue.body %></textarea>
-                  <a class="btn-floating teal lighten-1" id="memoEdit" name="<%= currentValue.id %>"><i class="material-icons">edit_mode</i></a>
-                  <a class="btn-floating teal lighten-1" id="memoDelete" name="<%= currentValue.id %>">delete</a><i class="material-icons">delete</i>
+                  <textarea class="materialize-textarea" id="memoText<%= currentValue.id %>"><%= currentValue.body %></textarea>
+                  <a class="btn-floating teal lighten-1 memoEdit" name="<%= currentValue.id %>"><i class="material-icons">edit_mode</i></a>
+                  <a class="btn-floating teal lighten-1 memoDelete" name="<%= currentValue.id %>">delete</a><i class="material-icons">delete</i>
                 </div>
               </li>
             <% })%>
@@ -209,7 +209,8 @@
 
     <!-- メモ編集時に使用する隠しフォーム -->
     <form action="/textEditer/editMemo" method="post" name="editMemo">
-      <input type="hidden" name="memoDataId"">
+      <input type="hidden" name="memoDataId">
+      <input type="hidden" name="memoText">
     </form>
 
     <!-- 未保存状態か判定するための隠しテキストデータ -->
@@ -227,8 +228,6 @@
     var $selectedCharacterLength2 = $('#selectedCharacterLength2');
     var $numberOfCharacter3 = $('#numberOfCharacter3');
     var $selectedCharacterLength3 = $('#selectedCharacterLength3');
-    var $memoText1 = $('#memoText1');
-    var $memoText2 = $('#memoText2');
     var $expectedBySFC = $('#expectedBySFC');
     var $expectedByDepartment = $('#expectedByDepartment');
     var $hiddenTitle = $('#hiddenTitle');
@@ -241,7 +240,6 @@
     var $newMemoText = $('#newMemoText');
     var $newMemoTitle = $('#newMemoTitle');
     var $deleteMemoButton = $('#memoDelete');
-    var $editMemoButton = $('#memoEdit');
     var mainTitle = $mainTitle.val();
 
     $('#textarea1').trigger('autoresize');
@@ -302,13 +300,20 @@
       document.createMemo.newMemoText.value = newMemoText;
       document.createMemo.submit();
     });
-    $deleteMemoButton.click(function(){
-      document.deleteMemo.memoDataId.value = this.name;
-      document.deleteMemo.submit();
+    $('.memoDelete').each(function(){
+      $(this).click(function(){
+        document.deleteMemo.memoDataId.value = this.name;
+        document.deleteMemo.submit();
+      });
     });
-    $editMemoButton.click(function(){
-      document.editMemo.memoDataId.value = this.name;
-      document.editMemo.submit();
+    $('.memoEdit').each(function(){
+      $(this).click(function(){
+        var memoId = this.name;
+        var $editMemoText = $('#memoText' + memoId);
+        document.editMemo.memoDataId.value = memoId;
+        document.editMemo.memoText.value = $editMemoText.val();
+        document.editMemo.submit();
+      });
     });
   });
   </script>
